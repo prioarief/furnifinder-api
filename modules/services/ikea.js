@@ -3,12 +3,14 @@ const puppeteer = require('../../config/puppeteer');
 const logger = require('../../config/logger');
 const { default: axios } = require('axios');
 
+const { IKEA_CATEGORIES = 'https://www.ikea.co.id/in/produk' } = process.env;
+
 class Ikea {
   async getCategories() {
     try {
       const browser = await puppeteer;
       const page = await browser.newPage();
-      await page.goto('https://www.ikea.co.id/en/produk', {
+      await page.goto(IKEA_CATEGORIES, {
         waitUntil: 'networkidle2',
       });
 
@@ -137,7 +139,7 @@ class Ikea {
       const image = $(element).attr('data-lazy');
       images.push(image);
     });
-    
+
     return {
       name,
       description,

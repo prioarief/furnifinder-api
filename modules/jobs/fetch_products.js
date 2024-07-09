@@ -27,7 +27,7 @@ const fetch = async (categoryId, limit, page, data) => {
 module.exports = {
   ikea: async function (
     page = 1,
-    limit = 2,
+    limit = 1,
     offset = 0,
     totalData = null,
     totalPage = 0,
@@ -109,7 +109,7 @@ module.exports = {
         await knex('products').insert(payload).onConflict('sku').merge();
         currentPage++;
 
-        await sleep(2000);
+        await sleep(5000);
 
         await this.ikea(
           currentPage,
@@ -121,7 +121,7 @@ module.exports = {
         );
       } else {
         await browser.close();
-        logger.info('Complete Fetch Products From Mitra 10');
+        logger.info('Complete Fetch Products From Ikea');
       }
     } catch (error) {
       await browser.close();

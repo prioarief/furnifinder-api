@@ -16,3 +16,7 @@ services:
       - DB_USER=
       - DB_PASSWORD=
       - DB_NAME=
+      - JOB_IKEA_CATEGORIES=
+      - JOB_IKEA_PRODUCTS=
+      - JOB_IKEA_PRODUCT_DETAIL=
+      - IKEA_CATEGORIES=
