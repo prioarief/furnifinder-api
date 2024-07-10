@@ -56,7 +56,7 @@ module.exports = {
       }
 
       let currentPage = page;
-      if (currentPage <= totalPage) {
+      if (currentPage <= 3) {
         logger.info(`Fetch Products From Ikea ${currentPage}/${totalPage}`);
 
         const categories = await knex('categories')

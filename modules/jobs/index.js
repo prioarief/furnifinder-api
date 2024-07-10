@@ -1,3 +1,4 @@
+const fetch_blog = require('./fetch_blog');
 const fetch_categories = require('./fetch_categories');
 const fetch_product_detail = require('./fetch_product_detail');
 const fetch_products = require('./fetch_products');
@@ -6,6 +7,7 @@ const {
   JOB_IKEA_CATEGORIES = '00 00 * * *',
   JOB_IKEA_PRODUCTS = '00 02 * * *',
   JOB_IKEA_PRODUCT_DETAIL = '00 05 * * *',
+  JOB_IKEA_BLOG = '00 05 * * *',
 } = process.env;
 
 const jobType = {
@@ -31,6 +33,12 @@ const jobs = [
     value: JOB_IKEA_PRODUCT_DETAIL,
     name: 'fetch ikea product detail',
     action: async () => await fetch_product_detail.ikea(),
+  },
+  {
+    type: jobType.every,
+    value: JOB_IKEA_BLOG,
+    name: 'fetch ikea blog',
+    action: async () => await fetch_blog.ikea(),
   },
 ];
 

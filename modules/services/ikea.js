@@ -147,6 +147,71 @@ class Ikea {
       images,
     };
   }
+
+  async getBlog(browser) {
+    const page = await browser.newPage();
+
+    // Navigate to the target website
+    await page.goto('https://www.ikea.co.id/in/inspirasi');
+
+    // Define a function to scroll to the bottom of the page
+    const scrollToBottom = async () => {
+      await page.evaluate(async () => {
+        await new Promise((resolve) => {
+          let totalHeight = 0;
+          const distance = 100;
+          const timer = setInterval(() => {
+            const scrollHeight = document.body.scrollHeight;
+            window.scrollBy(0, distance);
+            totalHeight += distance;
+
+            if (totalHeight >= scrollHeight) {
+              clearInterval(timer);
+              resolve();
+            }
+          }, 100);
+        });
+      });
+    };
+
+    // Perform the infinite scroll
+    let id = 1;
+    let previousHeight;
+    while (true) {
+      previousHeight = await page.evaluate('document.body.scrollHeight');
+      await scrollToBottom();
+      // await page.waitForTimeout(2000); // Wait for new content to load
+
+      let newHeight = await page.evaluate('document.body.scrollHeight');
+      if (newHeight === previousHeight || id === 5) {
+        break; // Exit the loop if no new content is loaded
+      }
+
+      id++;
+    }
+
+    const content = await page.content();
+    await browser.close();
+    const $ = cheerio.load(content);
+
+    const data = [];
+    $('#inspirationContainer .card').each((index, element) => {
+      const imgSrc = $(element).find('a img').attr('data-src');
+      const title = $(element).find('.card-title a').text().trim();
+      const link = $(element).find('.card-title a').attr('href');
+
+      data.push({
+        title,
+        external_id: Buffer.from(Buffer.from(link).toString('base64')).toString(
+          'base64'
+        ),
+        link: `https://www.ikea.co.id${link}`,
+        image_url: imgSrc,
+      });
+    });
+
+    return data;
+  }
 }
 
 module.exports = Ikea;
